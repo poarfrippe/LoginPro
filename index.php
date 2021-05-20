@@ -1,4 +1,7 @@
 
+<?php
+    
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,15 +22,6 @@
         <br>
         <input type="submit" >
     </form>
-
-    <?php
-        if (isset($_POST['login'])) {
-
-            echo $_POST['sendUsername'];
-            exit("sepp");
-
-        }
-    ?>
 
 </body>
 </html>

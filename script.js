@@ -1,18 +1,19 @@
 
+let caesarkey = 3
+
 window.onload = () =>  {
-    console.log("hallo seppl")
     document.getElementById("loginform").addEventListener("submit", formsubmit);
 }
 
 function formsubmit (e) {
     e.preventDefault()
     
-    console.log("imsubmitjs")
-
     let username = e.target.username.value
     let plainpassword = e.target.password.value
 
-    //do iatz verschlüsseln und so...
+    let encryptedPassword = verschluesseln(plainpassword)
+    
+    console.log("encrypted: \n" + encryptedPassword)
 
     //mit jQuerry viel cooler...
     let xhttp = new XMLHttpRequest();
@@ -22,11 +23,23 @@ function formsubmit (e) {
         if (this.readyState == 4 && this.status == 200) {
             // Response
             let response = this.responseText;
-            console.log(response)
+            console.log("decrypted: \n" + response)
         }
     };
 
-    let data = {username: username, password: plainpassword};
+    let data = {username: username, password: encryptedPassword};
     xhttp.send(JSON.stringify(data));
 
+}
+
+function verschluesseln (password) {
+
+    let encryptedPassword = ""
+    
+    for (let i = 0; i < password.length; ++i) {
+        let encryptedChar = String.fromCharCode(password.charCodeAt(i) + caesarkey)
+        encryptedPassword += encryptedChar
+    }
+
+    return encryptedPassword
 }

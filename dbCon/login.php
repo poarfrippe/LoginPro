@@ -1,5 +1,7 @@
 <?php
 
+    $caesarkey = 3;
+
     $request = 2;
 
     // Read $_GET value
@@ -16,7 +18,16 @@
         $username = $data->username;
         $password = $data->password;
 
-        echo "coolcoolcool";
+        $passArray = str_split($password);
+
+        $decrypted = "";
+        for ($i = 0; $i < count($passArray); ++$i){
+            $decrypted .= chr(ord($passArray[$i]) - $caesarkey);
+        }
+
+        echo "vomserverzrugoberiatz: \n";
+        echo "z";
+
         exit;
     }
 
