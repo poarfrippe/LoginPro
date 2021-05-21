@@ -23,7 +23,7 @@ function formsubmit (e) {
         if (this.readyState == 4 && this.status == 200) {
             // Response
             let response = this.responseText;
-            console.log("decrypted: \n" + response)
+            console.log("decrypted: " + response)
         }
     };
 
