@@ -16,9 +16,9 @@
     
     <form id="loginform" name='login'>
         Username<br>
-        <input type="text" name="username" placeholder="username"><br>
+        <input type="text" name="username" placeholder="z.B.: Oberhirt187"><br>
         Password<br>
-        <input type="password" name="password" placeholder="password">
+        <input type="password" name="password" placeholder="***********">
         <br>
         <input type="submit" >
     </form>
