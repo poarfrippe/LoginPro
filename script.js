@@ -12,7 +12,8 @@ function formsubmit (e) {
     let username = e.target.username.value
     let plainpassword = e.target.password.value
 
-    diffieHellman(plainpassword, username)
+    rsaencryption(plainpassword, username)
+    //diffieHellman(plainpassword, username)
     //sendcaesar(plainpassword, username)
 
 }
@@ -88,25 +89,6 @@ function diffieHellman(toencrypt, username) {
 
 }
 
-function modularePow(x, y) {
-    let res = 1;     // Initialize result
- 
-    while (y > 0)
-    {
-        // If y is odd, multiply x with result
-        if (y & 1)
-            res = res*x;
- 
-        // y must be even now
-        y = y>>1; // y = y/2
-        x = x*x; // Change x to x^2
-
-        console.log("zwischensepp: " + res)
-
-    }
-    return res;
-}
-
 function powMod(x, y, p)
 {
     // Initialize result
@@ -179,4 +161,10 @@ function diffieencrypt(toencrypt) {
     let encrypted = toencrypt ^ diffieKey
     console.log("encrypted Password: " + encrypted)
     return encrypted
+}
+
+function rsaencryption(toencrypt, username) {
+
+    
+
 }
