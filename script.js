@@ -12,7 +12,7 @@ function formsubmit (e) {
     let username = e.target.username.value
     let plainpassword = e.target.password.value
 
-    rsaencryption(plainpassword, username)
+    rsa(plainpassword, username)
     //diffieHellman(plainpassword, username)
     //sendcaesar(plainpassword, username)
 
@@ -163,8 +163,50 @@ function diffieencrypt(toencrypt) {
     return encrypted
 }
 
-function rsaencryption(toencrypt, username) {
+function rsa(toencrypt, username) {
 
-    
+    let xhttp = new XMLHttpRequest();
+    xhttp.open('GET', 'backend/asymetricLogin.php?get=publicKey');
+    xhttp.onload = function() {
+        if (xhttp.status === 200) {
+            let response = xhttp.responseText.split(" ")
+            let e = response[0]
+            let N = response[1]
 
+            //console.log("Response: " + response)
+            rsaSend(toencrypt, username, e, N)
+        }
+        else {
+            console.log('Request failed.  Returned status of ' + xhttp.status);
+        }
+    };
+    xhttp.send();
+
+}
+
+function rsaSend(toencrypt, username, e, N) {
+    let rsaArray = []
+    for (let i = 0; i < toencrypt.length; ++i) {
+        let charCode = toencrypt.charCodeAt(i)
+        let rsaed = powMod(charCode, e, N)
+        rsaArray.push(rsaed)
+    }
+    //console.log(rsaArray) 
+
+
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "backend/asymetricLogin2.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // Response
+            let response = this.responseText
+            console.log("Response: " + response)
+        } else if (this.status != 200) {
+            console.log("Post failed with status " + this.status)
+        }
+    };
+
+    let data = {rsaArray: rsaArray, username: username};
+    xhttp.send(JSON.stringify(data));
 }
