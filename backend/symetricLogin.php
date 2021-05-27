@@ -12,11 +12,15 @@
 
         $data = json_decode(file_get_contents("php://input"));
         $username = $data->username;    
-        $password = $data->password;
+        $passwordArray = $data->passwordArray;
 
-        $plainpassword = $password ^ $_SESSION["diffieKey"];
+        $plainArray = array();
+        for ($i = 0; $i < count($passwordArray); ++$i) {
+            $plainArray[$i] = chr($passwordArray[$i] ^ $_SESSION['diffieKey']);
+        }
 
-        echo $plainpassword;
+        $plainpasswd = implode("", $plainArray);
+        echo $plainpasswd;
 
         exit;
     }

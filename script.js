@@ -12,8 +12,8 @@ function formsubmit (e) {
     let username = e.target.username.value
     let plainpassword = e.target.password.value
 
-    rsa(plainpassword, username)
-    //diffieHellman(plainpassword, username)
+    //rsa(plainpassword, username)
+    diffieHellman(plainpassword, username)
     //sendcaesar(plainpassword, username)
 
 }
@@ -59,10 +59,9 @@ function diffieHellman(toencrypt, username) {
      * key=B^a mod p und key=A^b mod p   -> beide Keys jetzt gleich und es kann los gehen!!!
     */
 
-    //des tuat bled zio flitze
-    let p = generatePrime(5000)                     //public
-    let g = generatePrime(500)                      //public
-    let a = Math.round((Math.random() * 100) + 2)     //private     //darf ahnscheindend nicht ueber 10 sonst faxen
+    let p = generatePrime(5000000)                     //public
+    let g = generatePrime(500000)                      //public
+    let a = Math.round((Math.random() * 100000) + 2)     //private     //darf ahnscheindend nicht ueber 10 sonst faxen
 
     //let resToSend = (Math.pow(g, a))%p        //manchmahl villeicht NaN weil g^a = infinity....
     let resToSend = powMod(g, a, p)            //gonz wilde!!!
@@ -153,14 +152,18 @@ function sendMessage(toencrypt, username) {
         }
     };
 
-    let data = {username: username, password: diffieencrypt(toencrypt)};
+    let data = {username: username, passwordArray: diffieencrypt(toencrypt)};
     xhttp.send(JSON.stringify(data));
 }
 
 function diffieencrypt(toencrypt) {
-    let encrypted = toencrypt ^ diffieKey
-    console.log("encrypted Password: " + encrypted)
-    return encrypted
+
+    let encryptedArray = []
+    for (let i = 0; i < toencrypt.length; ++i){
+        encryptedArray.push(toencrypt.charCodeAt(i) ^ diffieKey)        //jeder character wird mit den Key geXORt
+    }
+
+    return encryptedArray
 }
 
 function rsa(toencrypt, username) {
