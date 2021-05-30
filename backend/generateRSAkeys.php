@@ -23,16 +23,16 @@
         return $p;
     }
 
-    function gcd ($a, $b) {
-        return $b ? gcd($b, $a % $b) : $a;
+    function ggt ($a, $b) {
+        return $b ? ggt($b, $a % $b) : $a;
     }
 
-    function getE($bis) {
+    function getE($phiN) {
         $i = 2;
-        while(gcd($i, $bis) != 1) {         //ggt
+        while(ggt($i, $phiN) != 1) {
             ++$i;
         }
-        if ($i >= $bis) {
+        if ($i >= $phiN) {
             echo "e groesser als Phi(N)!! ERRRROR";
             return -1;
         }

@@ -1,6 +1,5 @@
 
 let caesarkey = 3
-let diffieKey
 
 window.onload = () =>  {
     document.getElementById("loginform").addEventListener("submit", formsubmit);
@@ -12,8 +11,8 @@ function formsubmit (e) {
     let username = e.target.username.value
     let plainpassword = e.target.password.value
 
-    //rsa(plainpassword, username)
-    diffieHellman(plainpassword, username)
+    rsa(plainpassword, username)
+    //diffieHellman(plainpassword, username)
     //sendcaesar(plainpassword, username)
 
 }
@@ -59,13 +58,11 @@ function diffieHellman(toencrypt, username) {
      * key=B^a mod p und key=A^b mod p   -> beide Keys jetzt gleich und es kann los gehen!!!
     */
 
-    let p = generatePrime(5000000)                     //public
-    let g = generatePrime(500000)                      //public
-    let a = Math.round((Math.random() * 100000) + 2)     //private     //darf ahnscheindend nicht ueber 10 sonst faxen
+    let p = generatePrime(5000000)                          //public
+    let g = generatePrime(500000)                           //public
+    let a = Math.round((Math.random() * 100000) + 2)        //private
 
-    //let resToSend = (Math.pow(g, a))%p        //manchmahl villeicht NaN weil g^a = infinity....
-    let resToSend = powMod(g, a, p)            //gonz wilde!!!
-
+    let A = powMod(g, a, p)                                 //g^a mod p
 
     let xhttp = new XMLHttpRequest();
     xhttp.open("POST", "backend/keyexchange.php", true);
@@ -73,17 +70,15 @@ function diffieHellman(toencrypt, username) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // Response
-            let response = this.responseText.split(" ")
-            let B = parseInt(response[0]);
-            diffieKey = powMod(B, a, p)
-            //console.log("key von hier: " + key)
-            //console.log("key von Server: " + response[1])
+            let response = this.responseText
+            let B = parseInt(response);
+            let diffieKey = powMod(B, a, p)
 
-            sendMessage(toencrypt, username)
+            sendMessage(toencrypt, username, diffieKey)
         }
     };
 
-    let data = {p: p, g: g, A: resToSend};
+    let data = {p: p, g: g, A: A};
     xhttp.send(JSON.stringify(data));
 
 }
@@ -139,7 +134,7 @@ function checkIfPrime(tocheck) {
     return !a
 }
 
-function sendMessage(toencrypt, username) {
+function sendMessage(toencrypt, username, diffieKey) {
 
     let xhttp = new XMLHttpRequest();
     xhttp.open("POST", "backend/symetricLogin.php", true);
@@ -152,11 +147,11 @@ function sendMessage(toencrypt, username) {
         }
     };
 
-    let data = {username: username, passwordArray: diffieencrypt(toencrypt)};
+    let data = {username: username, passwordArray: diffieencrypt(toencrypt, diffieKey)};
     xhttp.send(JSON.stringify(data));
 }
 
-function diffieencrypt(toencrypt) {
+function diffieencrypt(toencrypt, diffieKey) {
 
     let encryptedArray = []
     for (let i = 0; i < toencrypt.length; ++i){

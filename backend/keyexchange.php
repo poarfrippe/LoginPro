@@ -16,16 +16,13 @@
         //b generieren und B = g^b mod p und schicken
         //donn A^b mod p und fertig
 
-        $b = -1;
-        $B = -1;
-        $key = -1;
         $b = rand (2, 100);
         $B = powMod($g, $b, $p);        //mit modularen Potenzieren, weil sunst fasst ers ueberhaupt nimmer
 
         $key = powMod($A, $b, $p);
         $_SESSION["diffieKey"] = $key;
 
-        echo $B." ";
+        echo $B;
         exit;
 
     }
